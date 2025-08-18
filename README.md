@@ -1,12 +1,11 @@
 <p align="center">
-	<img src="docs/astrariscv_logo.png" alt="AstraRISCV Logo" width="300"/>
+	<img src="docs/CANON_logo.png" alt="AstraRISCV Logo" width="300"/>
 </p>
 
 *A SystemC/TLM-2.0 Virtual Prototype of a RISC-V MCU for Architectural Exploration*  
 
 ## Project Overview
-AstraRISCV is a lightweight **virtual prototype** of a RISC-V based microcontroller, modeled in **SystemC/TLM-2.0 (LT)**.  
-The goal of this project is to provide a platform for **architectural exploration**, where different system configurations (bus width, memory latencies, peripheral delays) can be tested and compared before RTL design.  
+CANON is a lightweight **virtual prototype** of a RISC-V based microcontroller, modeled in **SystemC/TLM-2.0 (LT)**.  
 
 The initial implementation targets the **RV32I base ISA**, with simple memory and peripheral models.
 
