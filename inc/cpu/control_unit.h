@@ -38,6 +38,8 @@ SC_MODULE(control_unit) {
     sc_in<sc_uint<5>>  alu_op_in;    // decoded ALU op (room for future ops)
     sc_in<sc_uint<3>>  br_flags_in;  // {eq, lt_s, lt_u} from ALU
 
+    sc_in<sc_uint<3>> funct3_in;
+
     // Outputs
     sc_out<sc_uint<2>> pc_op_out;    // PC+4, BRANCH, JAL, JALR
 

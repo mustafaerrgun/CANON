@@ -15,26 +15,54 @@
 #include <systemc.h>
 
 SC_MODULE(pc_unit) {
-    // ==== Inputs ====
-    sc_in<bool>         reset_n;            // Active-low reset from top
-    sc_in<sc_uint<32>>  boot_addr_in;       // Boot/reset address (e.g., 0x00000000)
+    // Inputs
+    sc_in<bool>        reset_n;
+    sc_in<sc_uint<2>>  pc_op_in;        // select (PC+4, BRANCH, JAL, JALR)
+    sc_in<sc_uint<32>> boot_addr_in;    // reset vector
+    sc_in<sc_uint<32>> branch_target_in;
+    sc_in<sc_uint<32>> jal_target_in;
+    sc_in<sc_uint<32>> jalr_target_in;
 
-    sc_in<sc_uint<32>>  pc_curr_in;         // Current PC from core state
+    // Outputs
+    sc_out<sc_uint<32>> pc_out;       // current PC (to memory)
+    sc_out<sc_uint<32>> pc_plus4_out; // for WB on JAL/JALR
 
-    sc_in<sc_uint<2>>   pc_op_in;           // 00:PC+4, 01:BRANCH, 10:JAL, 11:JALR
+    // Internal PC register
+    sc_signal<sc_uint<32>> pc_reg;
 
-    // Candidate targets computed by ALU/Branch unit
-    sc_in<sc_uint<32>>  branch_target_in;   // PC + imm (conditional branches)
-    sc_in<sc_uint<32>>  jal_target_in;      // PC + imm (JAL)
-    sc_in<sc_uint<32>>  jalr_target_in;     // (rs1 + imm) & ~1 (JALR)
+    // Next PC calculation
+    void comb() {
+        sc_uint<32> pc  = pc_reg.read();
+        sc_uint<32> pc4 = pc + 4;
+        sc_uint<32> npc = pc4;
 
-    // ==== Outputs ====
-    sc_out<sc_uint<32>> pc_out;             // Current PC (to fetch/decoder)
-    sc_out<sc_uint<32>> npc_out;            // Selected next PC
-    sc_out<sc_uint<32>> pc_plus4_out;       // PC + 4 (for WB on JAL/JALR)
+        switch (pc_op_in.read()) {
+            case 0: npc = pc4; break;
+            case 1: npc = branch_target_in.read(); break;
+            case 2: npc = jal_target_in.read(); break;
+            case 3: npc = jalr_target_in.read(); break;
+        }
 
-    // Constructor (behavior to be added later)
-    SC_CTOR(pc_unit) { /* SC_METHOD(comb) */ }
+        pc_out.write(pc);
+        pc_plus4_out.write(pc4);
+        next_pc = npc;
+    }
+
+    // Sequential update of PC register
+    void seq() {
+        if (!reset_n.read())
+            pc_reg.write(boot_addr_in.read());
+        else
+            pc_reg.write(next_pc);
+    }
+
+    sc_uint<32> next_pc; // temp
+
+    SC_CTOR(pc_unit) {
+        SC_METHOD(comb);
+        sensitive << pc_reg << pc_op_in << branch_target_in << jal_target_in << jalr_target_in;
+
+        SC_METHOD(seq);
+        sensitive << clk.pos();
+    }
 };
-
-#endif // PC_UNIT_H
