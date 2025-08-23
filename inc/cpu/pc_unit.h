@@ -16,7 +16,6 @@
 
 SC_MODULE(pc_unit) {
     // Inputs
-    sc_in<bool>        reset_n;
     sc_in<sc_uint<2>>  pc_op_in;        // select (PC+4, BRANCH, JAL, JALR)
     sc_in<sc_uint<32>> boot_addr_in;    // reset vector
     sc_in<sc_uint<32>> branch_target_in;

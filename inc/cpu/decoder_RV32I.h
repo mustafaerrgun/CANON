@@ -13,6 +13,7 @@
 
 #include <systemc.h>
 #include "control_unit.h"
+#include "alu_defs.h"
 
 // 7-bit base opcodes (RV32I)
 enum Opcode7 : sc_uint<7> {
@@ -27,12 +28,6 @@ enum Opcode7 : sc_uint<7> {
     OPCODE_OP    = 0b0110011, // 0x33 (R-type ALU)
     OPCODE_FENCE = 0b0001111, // 0x0F
     OPCODE_SYSTEM= 0b1110011  // 0x73
-};
-
-enum ALUFunc : sc_uint<4> {
-    ALU_ADD=0, ALU_SUB, ALU_AND, ALU_OR, ALU_XOR,
-    ALU_SLT, ALU_SLTU, ALU_SLL, ALU_SRL, ALU_SRA,
-    ALU_INVALID=15
 };
 
 SC_MODULE(decoder_RV32I) {
