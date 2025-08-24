@@ -20,13 +20,14 @@ SC_MODULE(alu_RV32I) {
     sc_in<sc_uint<32>> data_a_in;   // operand A (from register file)
     sc_in<sc_uint<32>> data_b_in;   // operand B (from register file)
 
-    sc_in<sc_int<32>>  imm_in;      // immediate (from decoder)
-    sc_in<sc_uint<4>>  alu_func_in; // ALU function select
-    sc_in<bool>        alu_src_in;  // ALU source select (0=rs2, 1=imm)
+    sc_in<sc_uint<4>>  alu_func_in; // ALU function from Decoder
+    sc_out<sc_uint<1>> alu_src_in;  // ALU source select (0=rs2, 1=imm) from Decoder
+    sc_in<sc_int<32>>  imm_in;      // immediate from Decoder
 
     // Outputs
     sc_out<sc_uint<32>> result_out;   // ALU computation result
     sc_out<sc_uint<3>>  br_flags_out; // {eq, lt_s, lt_u} for branch decisions
+    sc_out<sc_uint<32>> target_out;   // ALU result for PC target (branch/jump)
 
     void alu_process(void);
 

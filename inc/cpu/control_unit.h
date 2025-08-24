@@ -35,24 +35,23 @@ enum WBSel : sc_uint<2> { WB_ALU=0, WB_LOAD=1, WB_PC4=2 };
 
 SC_MODULE(control_unit) {
     // Inputs
-    sc_in<sc_uint<5>>  alu_op_in;    // decoded ALU op (room for future ops)
-    sc_in<sc_uint<3>>  br_flags_in;  // {eq, lt_s, lt_u} from ALU
+    sc_in<sc_uint<5>>  alu_op_in;    // decoded ALU op 
+    sc_in<sc_uint<3>> funct3_in;     // Memory mode
 
-    sc_in<sc_uint<3>> funct3_in;
+    sc_in<sc_uint<3>>  br_flags_in;  // {eq, lt_s, lt_u} from ALU
 
     // Outputs
     sc_out<sc_uint<2>> pc_op_out;    // PC+4, BRANCH, JAL, JALR
 
-    // Data memory unit
-    sc_out<sc_uint<2>> mem_op_out;   // 00=NONE, 01=LOAD, 10=STORE
-    sc_out<sc_uint<3>> mem_mode_out; // 000=LB, 001=LH, 010=LW, 100=LBU, 101=LHU
-    sc_out<bool>       reg_we_out;   // write enable for rd
-    sc_out<sc_uint<2>> wb_sel_out;   // 00=ALU, 01=LOAD, 10=PC+4
+    sc_out<bool>       reg_we_out;   // write enable for rd to Register Unit
+
+    sc_out<sc_uint<2>> wb_sel_out;   // 00=ALU, 01=LOAD, 10=PC+4 to WB Mux
+
+    sc_out<sc_uint<2>> mem_op_out;   // 00=NONE, 01=LOAD, 10=STORE to Memory
+    sc_out<sc_uint<3>> mem_mode_out; // 000=LB, 001=LH, 010=LW, 100=LBU, 101=LHU to Memory
 
     // Combinational process
     void comb();
-
-
 
     SC_CTOR(control_unit) {
         SC_METHOD(comb);

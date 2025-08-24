@@ -17,3 +17,9 @@ void register_unit::comb_read() {
     data_a_out.write(v1);
     data_b_out.write(v2);
 }
+
+void register_unit::comb_write() {
+    if (we_in.read() && rd_addr_in.read() != 0) {
+        regs[rd_addr_in.read()] = wd_in.read();
+    }
+}

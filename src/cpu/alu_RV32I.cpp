@@ -59,4 +59,5 @@ void alu_RV32I::alu_process(void) {
     // ---- Drive outputs ----
     result_out.write(res);
     br_flags_out.write(flags);
+    target_out.write(res); // Always drive target_out with ALU result
 }

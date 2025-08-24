@@ -16,15 +16,18 @@
 
 SC_MODULE(pc_unit) {
     // Inputs
-    sc_in<sc_uint<2>>  pc_op_in;        // select (PC+4, BRANCH, JAL, JALR)
-    sc_in<sc_uint<32>> boot_addr_in;    // reset vector
-    sc_in<sc_uint<32>> branch_target_in;
-    sc_in<sc_uint<32>> jal_target_in;
-    sc_in<sc_uint<32>> jalr_target_in;
+    sc_in<sc_uint<2>>  pc_op_in;        // select (PC+4, BRANCH, JAL, JALR) from Control Unit
+
+    sc_in<sc_uint<32>> boot_addr_in;    // reset vector from top level
+
+    sc_in<sc_uint<32>> branch_target_in;    // Branch target address from ALU
+    sc_in<sc_uint<32>> jal_target_in;       // JAL target address   from ALU
+    sc_in<sc_uint<32>> jalr_target_in;      // JALR target address from ALU
 
     // Outputs
     sc_out<sc_uint<32>> pc_out;       // current PC (to memory)
-    sc_out<sc_uint<32>> pc_plus4_out; // for WB on JAL/JALR
+
+    sc_out<sc_uint<32>> pc_plus4_out; // for WB on JAL/JALR to WB Mux
 
     // Internal PC register
     sc_signal<sc_uint<32>> pc_reg;
