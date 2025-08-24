@@ -18,7 +18,7 @@ The initial implementation targets the **RV32I base ISA**, with simple memory an
 - Communicates with memory and peripherals via a TLM initiator socket.
 
 <p align="center">
-	<img src="docs/riscv_cpu.png" alt="AstraRISCV Logo" width="500"/>
+	<img src="docs/riscv_cpu.png" alt="CPU aRCHITECTURE" width="500"/>
 </p>
 
 ### 2. **Flash Memory (Program Storage)**
