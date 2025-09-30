@@ -4,7 +4,7 @@
  * Submodule: Control Unit 
  ************************************************************/
 
-#include "control_unit.h"
+#include "../../../inc/cpu/control_unit.h"
 
 void control_unit::comb() {
     // ---- Safe defaults (NOP) ----
@@ -14,8 +14,9 @@ void control_unit::comb() {
     bool       reg_we   = false;
     sc_uint<2> wb_sel   = WB_ALU;
 
+
     // Unpack inputs
-    const sc_uint<5> op  = alu_op_in.read();
+    const unsigned op = alu_op_in.read().to_uint();
     const sc_uint<3> f3  = funct3_in.read();
     const bool eq   = br_flags_in.read()[0];
     const bool lt_s = br_flags_in.read()[1];
