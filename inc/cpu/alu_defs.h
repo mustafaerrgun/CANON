@@ -16,19 +16,18 @@
 static constexpr int XLEN = 32;
 
 // ALU function select (4-bit) — RV32I base ops
-enum ALUFunc : sc_uint<4> {
-    ALU_ADD = 0,
-    ALU_SUB,
-    ALU_AND,
-    ALU_OR,
-    ALU_XOR,
-    ALU_SLT,     // signed less-than
-    ALU_SLTU,    // unsigned less-than
-    ALU_SLL,     // shift left logical
-    ALU_SRL,     // shift right logical
-    ALU_SRA,     // shift right arithmetic
-    ALU_INVALID = 15
-};
+const sc_uint<4>    ALU_ADD = 0;
+const sc_uint<4>    ALU_SUB = 1;
+const sc_uint<4>    ALU_AND = 2;
+const sc_uint<4>    ALU_OR  = 3;
+const sc_uint<4>    ALU_XOR = 4;
+const sc_uint<4>    ALU_SLT = 5;     // signed less-than
+const sc_uint<4>    ALU_SLTU = 6;    // unsigned less-than
+const sc_uint<4>    ALU_SLL = 7;     // shift left logical
+const sc_uint<4>    ALU_SRL = 8;     // shift right logical
+const sc_uint<4>    ALU_SRA = 9;     // shift right arithmetic
+const sc_uint<4>    ALU_INVALID = 15;
+
 
 // Branch flag bit positions: {eq, lt_s, lt_u}
 // Matches control_unit expectation: br_flags_in[0]=eq, [1]=lt_s, [2]=lt_u
