@@ -17,7 +17,6 @@ void control_unit::comb() {
 
     // Unpack inputs
     sc_uint<6>  op = alu_op_in.read();
-    std::cout << "DEBUG: alu_op_in = " << alu_op_in.read() << std::endl;
     const sc_uint<3> f3  = funct3_in.read();
     const bool eq   = br_flags_in.read()[0];
     const bool lt_s = br_flags_in.read()[1];
