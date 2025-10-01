@@ -17,9 +17,8 @@ The initial implementation targets the **RV32I base ISA**, with simple memory an
 - Executes instructions from the RV32I base ISA.
 - Communicates with memory and peripherals via a TLM initiator socket.
 
-
 <p align="center">
-	<img src="docs/riscv_cpu.png" alt="CPU Architecture" width="300"/>
+	<img src="docs/riscv_cpu.png" alt="CPU Architecture" height="700" width="500"/>
 </p>
 
 ### 2. **Flash Memory (Program Storage)**
