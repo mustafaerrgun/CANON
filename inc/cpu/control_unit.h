@@ -14,34 +14,34 @@
 #include <systemc.h>
 
 // ---- Operation class tags ----
-static constexpr unsigned OP_ALU    = 0x00;
-static constexpr unsigned OP_LOAD   = 0x08;
-static constexpr unsigned OP_STORE  = 0x18;
-static constexpr unsigned OP_BRANCH = 0x10;
-static constexpr unsigned OP_JAL    = 0x20;
-static constexpr unsigned OP_JALR   = 0x21;
-static constexpr unsigned OP_LUI    = 0x30;
-static constexpr unsigned OP_AUIPC  = 0x31;
+const sc_uint<6>  OP_ALU    = 0x00;
+const sc_uint<6>  OP_LOAD   = 0x08;
+const sc_uint<6>  OP_STORE  = 0x18;
+const sc_uint<6>  OP_BRANCH = 0x10;
+const sc_uint<6>  OP_JAL    = 0x11;
+const sc_uint<6>  OP_JALR   = 0x21;
+const sc_uint<6>  OP_LUI    = 0x30;
+const sc_uint<6>  OP_AUIPC  = 0x31;
 
 // ---- PC operation select ----
-static const sc_uint<2> PC_PLUS4 = 0;
-static const sc_uint<2> PC_BRANCH = 1;
-static const sc_uint<2> PC_JAL    = 2;
-static const sc_uint<2> PC_JALR   = 3;
+const sc_uint<2> PC_PLUS4  = 0;
+const sc_uint<2> PC_BRANCH = 1;
+const sc_uint<2> PC_JAL    = 2;
+const sc_uint<2> PC_JALR   = 3;
 
 // ---- Memory operation ----
-static const sc_uint<2> MEM_NONE  = 0;
-static const sc_uint<2> MEM_LOAD  = 1;
-static const sc_uint<2> MEM_STORE = 2;
+const sc_uint<2> MEM_NONE  = 0;
+const sc_uint<2> MEM_LOAD  = 1;
+const sc_uint<2> MEM_STORE = 2;
 
 // ---- Write-back source select ----
-static const sc_uint<2> WB_ALU  = 0;
-static const sc_uint<2> WB_LOAD = 1;
-static const sc_uint<2> WB_PC4  = 2;
+const sc_uint<2> WB_ALU  = 0;
+const sc_uint<2> WB_LOAD = 1;
+const sc_uint<2> WB_PC4  = 2;
 
 SC_MODULE(control_unit) {
     // Inputs
-    sc_in<sc_uint<5>>  alu_op_in;    // decoded ALU op 
+    sc_in<sc_uint<6>>  alu_op_in;    // decoded ALU op 
     sc_in<sc_uint<3>> funct3_in;     // Memory mode
 
     sc_in<sc_uint<3>>  br_flags_in;  // {eq, lt_s, lt_u} from ALU

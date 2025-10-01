@@ -18,7 +18,7 @@ static void REQUIRE(bool c, const char* msg){ if(!c){ SC_REPORT_ERROR("TEST", ms
 
 int sc_main(int, char**) {
     // Signals
-    sc_signal<sc_uint<5>>  alu_op_s;
+    sc_signal<sc_uint<6>>  alu_op_s;
     sc_signal<sc_uint<3>>  br_flags_s;   // {eq, lt_s, lt_u}
     sc_signal<sc_uint<3>>  funct3_s;
 
@@ -60,7 +60,7 @@ int sc_main(int, char**) {
     sc_start(1, SC_NS);
     REQUIRE(mem_op_s.read() == MEM_STORE,"STORE mem_op");
     REQUIRE(reg_we_s.read() == false,     "STORE no rd write");
-
+    
     // ---- Test 4: BRANCH (BEQ taken) ----
     alu_op_s.write(OP_BRANCH); 
     funct3_s.write(0b000); // BEQ

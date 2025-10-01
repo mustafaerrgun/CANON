@@ -16,35 +16,36 @@ void control_unit::comb() {
 
 
     // Unpack inputs
-    const unsigned op = alu_op_in.read().to_uint();
+    sc_uint<6>  op = alu_op_in.read();
+    std::cout << "DEBUG: alu_op_in = " << alu_op_in.read() << std::endl;
     const sc_uint<3> f3  = funct3_in.read();
     const bool eq   = br_flags_in.read()[0];
     const bool lt_s = br_flags_in.read()[1];
     const bool lt_u = br_flags_in.read()[2];
 
-    switch (op) {
-        case OP_ALU:
+    if(op == OP_ALU)
+    {
             // R/I ALU operations write result to rd
             reg_we = true;
             wb_sel = WB_ALU;
-            break;
-
-        case OP_LOAD:
+    }
+    else if(op == OP_LOAD)
+    {
             // Loads: mem_mode == funct3 (RV32I encoding)
             mem_op   = MEM_LOAD;
             mem_mode = f3;            // 000 LB,001 LH,010 LW,100 LBU,101 LHU
             reg_we   = true;
             wb_sel   = WB_LOAD;
-            break;
-
-        case OP_STORE:
+    }
+    else if(op == OP_STORE)
+    {
             // Stores: only size matters (000 SB,001 SH,010 SW)
             mem_op   = MEM_STORE;
             mem_mode = (f3 & 0b011);  // mask to 000/001/010
             reg_we   = false;
-            break;
-
-        case OP_BRANCH: {
+    }
+    else if(op == OP_BRANCH)
+    {
             // Branch subtype via funct3
             // 000 BEQ, 001 BNE, 100 BLT, 101 BGE, 110 BLTU, 111 BGEU
             bool take = false;
@@ -60,36 +61,30 @@ void control_unit::comb() {
             if (take) pc_op = PC_BRANCH;
             // Branches do not write rd
             reg_we = false;
-            break;
-        }
-
-        case OP_JAL:
+    }
+    else if(op == OP_JAL)
+    {
             pc_op  = PC_JAL;
             reg_we = true;            // rd = PC+4
             wb_sel = WB_PC4;
-            break;
-
-        case OP_JALR:
+    }
+    else if(op == OP_JALR)
+    {
             pc_op  = PC_JALR;
             reg_we = true;            // rd = PC+4
             wb_sel = WB_PC4;
-            break;
-
-        case OP_LUI:
+    }
+    else if(op == OP_LUI)
+    {
             // rd = imm << 12 
             reg_we = true;
             wb_sel = WB_ALU;
-            break;
-
-        case OP_AUIPC:
+    }
+    else if(op == OP_AUIPC)
+    {
             // rd = PC + imm 
             reg_we = true;
             wb_sel = WB_ALU;
-            break;
-
-        default:
-            // keep NOP defaults
-            break;
     }
 
     // ---- Drive outputs ----
