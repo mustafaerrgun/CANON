@@ -1,5 +1,5 @@
 /*
- * test_control_unit.cpp
+ * test_decoder.cpp
  *
  * Unit tests for the decoder module of the CANON RISC-V CPU project.
 
