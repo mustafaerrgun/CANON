@@ -4,7 +4,7 @@
  * Submodule: Control Unit 
  ************************************************************/
 
-#include "../../../inc/cpu/control_unit.h"
+#include "control_unit.h"
 
 void control_unit::comb() {
     // ---- Safe defaults (NOP) ----

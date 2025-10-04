@@ -4,7 +4,7 @@
  * Submodule: Register File Unit
  ************************************************************/
 
-#include "../../../inc/cpu/register_unit.h"
+#include "register_unit.h"
 
 void register_unit::comb_read() {
     sc_uint<5> a1 = rs1_addr_in.read();
