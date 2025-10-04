@@ -14,57 +14,52 @@
 
 #include <systemc.h>
 
+enum PCOp : uint8_t { PC_PLUS4=0, PC_BRANCH=1, PC_JAL=2, PC_JALR=3 };
+
 SC_MODULE(pc_unit) {
     // Inputs
-    sc_in<sc_uint<2>>  pc_op_in;        // select (PC+4, BRANCH, JAL, JALR) from Control Unit
-
-    sc_in<sc_uint<32>> boot_addr_in;    // reset vector from top level
-
-    sc_in<sc_uint<32>> branch_target_in;    // Branch target address from ALU
-    sc_in<sc_uint<32>> jal_target_in;       // JAL target address   from ALU
-    sc_in<sc_uint<32>> jalr_target_in;      // JALR target address from ALU
+    sc_in<sc_uint<2>>   pc_op_in;
+    sc_in<sc_uint<32>>  boot_addr_in;      // used when reset is asserted
+    sc_in<sc_uint<32>>  curr_pc_in;        // PC from top-level
+    sc_in<sc_uint<32>>  branch_target_in;
+    sc_in<sc_uint<32>>  jal_target_in;
+    sc_in<sc_uint<32>>  jalr_target_in;
+    sc_in<bool>         reset_n;
 
     // Outputs
-    sc_out<sc_uint<32>> pc_out;       // current PC (to memory)
+    sc_out<sc_uint<32>> pc_out;            // next PC
+    sc_out<sc_uint<32>> pc_plus4_out;      // curr_pc + 4
 
-    sc_out<sc_uint<32>> pc_plus4_out; // for WB on JAL/JALR to WB Mux
-
-    // Internal PC register
-    sc_signal<sc_uint<32>> pc_reg;
-
-    // Next PC calculation
     void comb() {
-        sc_uint<32> pc  = pc_reg.read();
-        sc_uint<32> pc4 = pc + 4;
-        sc_uint<32> npc = pc4;
+        sc_uint<32> pc4 = curr_pc_in.read() + 4;
+        sc_uint<32> npc;
 
-        switch (pc_op_in.read()) {
-            case 0: npc = pc4; break;
-            case 1: npc = branch_target_in.read(); break;
-            case 2: npc = jal_target_in.read(); break;
-            case 3: npc = jalr_target_in.read(); break;
+        if (!reset_n.read()) {
+            npc = boot_addr_in.read();
+        } else {
+            switch (pc_op_in.read()) {
+                case PC_PLUS4:  npc = pc4;                            break;
+                case PC_BRANCH: npc = branch_target_in.read();        break;
+                case PC_JAL:    npc = jal_target_in.read();           break;
+                case PC_JALR:   npc = (jalr_target_in.read() & 0xFFFFFFFEu); break;
+                default:        npc = pc4;                            break;
+            }
         }
 
-        pc_out.write(pc);
+        pc_out.write(npc);
         pc_plus4_out.write(pc4);
-        next_pc = npc;
     }
-
-    // Sequential update of PC register
-    void seq() {
-        if (!reset_n.read())
-            pc_reg.write(boot_addr_in.read());
-        else
-            pc_reg.write(next_pc);
-    }
-
-    sc_uint<32> next_pc; // temp
 
     SC_CTOR(pc_unit) {
         SC_METHOD(comb);
-        sensitive << pc_reg << pc_op_in << branch_target_in << jal_target_in << jalr_target_in;
-
-        SC_METHOD(seq);
-        sensitive << clk.pos();
+        sensitive << reset_n
+                  << boot_addr_in
+                  << curr_pc_in
+                  << pc_op_in
+                  << branch_target_in
+                  << jal_target_in
+                  << jalr_target_in;
     }
 };
+
+#endif
