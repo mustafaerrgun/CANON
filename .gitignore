@@ -2,5 +2,6 @@ build
 .vscode
 
 test/unit_tests/src
+test/integration_tests/src
 .build
 *.x
