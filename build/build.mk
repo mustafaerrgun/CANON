@@ -8,7 +8,14 @@ EXE  := $(MODULE).x
 
 CXX      := g++
 LD       := g++
-CXXFLAGS := -g -DSC_INCLUDE_DYNAMIC_PROCESSES -Wno-deprecated -Wall -I. -I$(SYSTEMC)/include -I../../include
+
+# Project root (this Makefile is in build/, so parent dir is the root)
+PROJ_ROOT := $(abspath $(dir $(lastword $(MAKEFILE_LIST)))/..)
+
+# NOTE: point includes to $(PROJ_ROOT)/inc so headers like "alu_RV32I.h" are found
+CXXFLAGS := -g -DSC_INCLUDE_DYNAMIC_PROCESSES -Wno-deprecated -Wall \
+            -I. -I$(SYSTEMC)/include -I$(PROJ_ROOT)/inc
+
 LDFLAGS  := -lm -lpthread $(EXTRA_LIBS)
 
 TARGET_ARCH := linux64

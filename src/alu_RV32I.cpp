@@ -13,19 +13,19 @@
 
 void alu_RV32I::alu_process(void) {
     // Read inputs
-    const sc_uint<32> a      = data_a_in.read();          // rs1
-    const sc_uint<32> b_rs2  = data_b_in.read();          // rs2 (for compares)
-    const sc_uint<32> b_imm  = (sc_uint<32>) imm_in.read(); // imm as unsigned bits
-    const bool        use_imm = alu_src_in.read();
+    const sc_uint<32> a      = data_a_in.read();           // rs1
+    const sc_uint<32> b_rs2  = data_b_in.read();           // rs2 (for compares)
+    const sc_uint<32> imm_val  = imm_in.read();            // immediate (for ALU ops)
+    const bool        alu_src = alu_src_in.read();
     const sc_uint<4>  func    = alu_func_in.read();
 
     // Operand B selection for ALU datapath
-    const sc_uint<32> b = use_imm ? b_imm : b_rs2;
+    const sc_uint<32> b = alu_src ? imm_val : b_rs2;
 
     // Shift amount: RV32 uses only lower 5 bits
     const sc_uint<5> shamt = b.range(4, 0);
 
-    // ---- Compute branch flags from rs1 vs rs2 (not affected by alu_src) ----
+    // ---- Compute branch flags from rs1 vs rs2  ----
     sc_uint<3> flags = 0;
     const bool eq   = (a == b_rs2);
     const bool lt_s = ( (sc_int<32>)a < (sc_int<32>)b_rs2 );

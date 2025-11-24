@@ -16,18 +16,18 @@
 #include "alu_defs.h"
 
 // 7-bit base opcodes (RV32I)
-enum Opcode7 : sc_uint<7> {
-    OPCODE_LUI   = 0b0110111, // 0x37
-    OPCODE_AUIPC = 0b0010111, // 0x17
-    OPCODE_JAL   = 0b1101111, // 0x6F
-    OPCODE_JALR  = 0b1100111, // 0x67
-    OPCODE_BRANCH= 0b1100011, // 0x63
-    OPCODE_LOAD  = 0b0000011, // 0x03
-    OPCODE_STORE = 0b0100011, // 0x23
-    OPCODE_OPIMM = 0b0010011, // 0x13 (I-type ALU)
-    OPCODE_OP    = 0b0110011, // 0x33 (R-type ALU)
-    OPCODE_FENCE = 0b0001111, // 0x0F
-    OPCODE_SYSTEM= 0b1110011  // 0x73
+enum : uint8_t {
+    OPCODE_LUI    = 0b0110111, // 0x37
+    OPCODE_AUIPC  = 0b0010111, // 0x17
+    OPCODE_JAL    = 0b1101111, // 0x6F
+    OPCODE_JALR   = 0b1100111, // 0x67
+    OPCODE_BRANCH = 0b1100011, // 0x63
+    OPCODE_LOAD   = 0b0000011, // 0x03
+    OPCODE_STORE  = 0b0100011, // 0x23
+    OPCODE_OPIMM  = 0b0010011, // 0x13 (I-type ALU)
+    OPCODE_OP     = 0b0110011, // 0x33 (R-type ALU)
+    OPCODE_FENCE  = 0b0001111, // 0x0F
+    OPCODE_SYSTEM = 0b1110011  // 0x73
 };
 
 SC_MODULE(decoder_RV32I) {
@@ -39,12 +39,12 @@ SC_MODULE(decoder_RV32I) {
     sc_out<sc_uint<5>> rs2;    // Source register 2
     sc_out<sc_uint<5>> rd;     // Destination register
 
-    sc_out<sc_uint<5>> op_class;    // Operation class
+    sc_out<sc_uint<6>> op_class;    // Operation class
     sc_out<sc_uint<3>> memMode;     // Memory mode
 
     sc_out<sc_uint<4>> alu_func;     // ALU function
     sc_out<sc_uint<1>> alu_src;      // ALU source
-    sc_out<sc_int<32>> imm_out;     // Immediate value
+    sc_out<sc_uint<32>> imm_out;     // Immediate value
 
     void decode_proc(void);
 
@@ -54,3 +54,5 @@ SC_MODULE(decoder_RV32I) {
             dont_initialize();
     }
 };
+
+#endif // DECODER_RV32I_H

@@ -13,30 +13,44 @@
 
 #include <systemc.h>
 
-enum OpClass : sc_uint<5> {
-    OP_ALU    = 0x00,   // R/I arithmetic & logic (incl. ADDI, ANDI, SRLI, etc.)
-    OP_LOAD   = 0x08,   // LB/LH/LW/LBU/LHU
-    OP_STORE  = 0x18,   // SB/SH/SW
-    OP_BRANCH = 0x10,   // BEQ/BNE/BLT/BGE/BLTU/BGEU
-    OP_JAL    = 0x20,
+// ---- Operation class tags ----
+enum : uint8_t {
+    OP_ALU    = 0x00,
+    OP_LOAD   = 0x08,
+    OP_STORE  = 0x18,
+    OP_BRANCH = 0x10,
+    OP_JAL    = 0x11,
     OP_JALR   = 0x21,
     OP_LUI    = 0x30,
     OP_AUIPC  = 0x31
 };
 
-// PC operation select
-enum PCOp : sc_uint<2> { PC_PLUS4=0, PC_BRANCH=1, PC_JAL=2, PC_JALR=3 };
+// Memory mode (funct3) values
+enum : uint8_t {
+    MEM_NONE = 0, // No memory operation
+    MEM_LOAD = 1,
+    MEM_STORE= 2
+};
 
-// Memory operation 
-enum MemOp : sc_uint<2> { MEM_NONE=0, MEM_LOAD=1, MEM_STORE=2 };
+// PC operation select values
+enum : uint8_t {
+    PC_PLUS4  = 0, // PC + 4
+    PC_BRANCH = 1, // Branch target
+    PC_JAL    = 2, // JAL target
+    PC_JALR   = 3  // JALR target
+};
 
-// Write-back source select
-enum WBSel : sc_uint<2> { WB_ALU=0, WB_LOAD=1, WB_PC4=2 };
+// Write-back source select values
+enum : uint8_t {
+    WB_ALU  = 0,
+    WB_LOAD = 1,
+    WB_PC4  = 2
+};
 
 SC_MODULE(control_unit) {
     // Inputs
-    sc_in<sc_uint<5>>  alu_op_in;    // decoded ALU op 
-    sc_in<sc_uint<3>> funct3_in;     // Memory mode
+    sc_in<sc_uint<6>>  alu_op_in;    // decoded ALU op 
+    sc_in<sc_uint<3>>  funct3_in;     // Memory mode
 
     sc_in<sc_uint<3>>  br_flags_in;  // {eq, lt_s, lt_u} from ALU
 
@@ -55,8 +69,9 @@ SC_MODULE(control_unit) {
 
     SC_CTOR(control_unit) {
         SC_METHOD(comb);
-        sensitive << alu_op_in << br_flags_in << funct3_in;
-        dont_initialize();
+        sensitive << alu_op_in;
+        sensitive << br_flags_in;
+        sensitive << funct3_in;
     }
 };
 
