@@ -17,10 +17,12 @@ This project models the essential **CPU submodules:**
 
 The initial ISA target is **RV32I**.
 
+
 ## 2. RV32I CPU Core Architecture
 
+
 <p align="center">
-	<img src="docs/riscv_cpu.png" alt="CPU Architecture" width="350"/>
+	<img src="docs/riscv_cpu.png" alt="CPU Architecture" height="700" width="500"/>
 </p>
 
 The CPU core implements a simplified RV32I pipeline (single-cycle style, LT SystemC modeling):
